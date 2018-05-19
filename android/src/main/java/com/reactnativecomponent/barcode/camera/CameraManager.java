@@ -38,7 +38,7 @@ import java.io.IOException;
  */
 public final class CameraManager {
 
-  private static final String TAG ="Test";
+  private static final String TAG = CameraManager.class.getSimpleName();
 
 /*
   public static  int MIN_FRAME_WIDTH = 300;
@@ -220,11 +220,16 @@ private final Context context;
    * @param message The message to deliver.
    */
   public void requestAutoFocus(Handler handler, int message) {
-    if (camera != null && previewing) {
-      autoFocusCallback.setHandler(handler, message);
-      //Log.d(TAG, "Requesting auto-focus callback");
-      camera.autoFocus(autoFocusCallback);
 
+    if (camera != null && previewing) {
+      //Log.d(TAG, "Requesting auto-focus callback");
+      //
+      try {
+        camera.autoFocus(autoFocusCallback);
+      } catch(Exception ex){
+        Log.e(TAG, "Could not request autofocus", ex);
+        autoFocusCallback.onAutoFocus(false, camera);
+      }
     }
   }
 
